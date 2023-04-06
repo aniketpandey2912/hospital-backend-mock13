@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const app = express();
 const cors = require("cors");
 const { userRouter } = require("./routers/users.router");
+const { appointmentRouter } = require("./routers/appointments.router");
+const { authenticate } = require("./middlewares/auth.middleware");
 
 app.use(cors());
 app.use(express.json());
@@ -13,6 +15,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/users", userRouter);
+app.use("/appointments", authenticate, appointmentRouter);
 
 app.listen(process.env.PORT, async () => {
   try {
