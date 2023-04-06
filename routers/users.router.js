@@ -14,7 +14,9 @@ userRouter.post("/signup", async (req, res) => {
 
   try {
     bcrypt.hash(password, 5, async (err, hash) => {
-      if (hash) {
+      if (err) {
+        res.send({ mssg: "Something went wrong", err: err.message });
+      } else {
         let user = new UserModel({
           email,
           password: hash,
@@ -22,8 +24,6 @@ userRouter.post("/signup", async (req, res) => {
         });
         await user.save();
         res.send({ mssg: "Signup successfull, please login to continue" });
-      } else {
-        res.send({ mssg: "Something went wrong", err: err.message });
       }
     });
   } catch (err) {
