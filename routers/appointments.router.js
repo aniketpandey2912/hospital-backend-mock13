@@ -25,14 +25,14 @@ appointmentRouter.post("/create", async (req, res) => {
 
 appointmentRouter.patch("/book/:id", async (req, res) => {
   let ID = req.params.id;
+
   try {
-    let appointment = new AppointmentModel.findById({ _id: ID });
-    console.log(appointment);
-    let updated = { ...appointment, slots: appointment.slots - 1 };
-    await appointment.save();
-    res.send({ mssg: "Appointment created" });
+    let appointment = await AppointmentModel.findById({ _id: ID });
+    let updates = { slots: appointment.slots > 0 ? appointment.slots - 1 : 0 };
+    await AppointmentModel.findByIdAndUpdate({ _id: ID }, updates);
+    res.send({ mssg: "Appointment booked" });
   } catch (err) {
-    res.send({ mssg: "Appointment creation failed", err: err.message });
+    res.send({ mssg: "Appointment booking failed", err: err.message });
   }
 });
 
